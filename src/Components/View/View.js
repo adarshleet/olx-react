@@ -6,10 +6,10 @@ import './View.css';
 import { PostContext } from '../../store/postContext';
 function View() {
     const [user, setUser] = useState()
+    const [loading,setLoading] = useState(true)
     const { productDetails } = useContext(PostContext)
 
     const userId = productDetails?.userId
-    console.log(userId)
     const db = getFirestore();
     const collectionName = 'users';
     useEffect(() => {
@@ -20,6 +20,7 @@ function View() {
 
                 querySnapshot.forEach((doc) => {
                     const documentData = doc.data();
+                    setLoading(false)
                     setUser(documentData)
                 });
             } catch (error) {
@@ -27,30 +28,37 @@ function View() {
             }
         };
         getFilteredDocuments();
-    }, [])
+    }, [userId])
     console.log(user)
 
     return (
-        <div className="viewParentDiv">
-            <div className="imageShowDiv">
-                <img
-                    src={productDetails.image}
-                    alt=""
-                />
+        <div>
+            {loading ? 
+            <div>
+                <h1>loading...</h1>
             </div>
-            <div className="rightSection">
-                <div className="productDetails">
-                    <p>&#x20B9; {productDetails.price} </p>
-                    <span>{productDetails.name}</span>
-                    <p>{productDetails.category}</p>
-                    <span>{productDetails.date}</span>
+            :
+            (<div className="viewParentDiv">
+                <div className="imageShowDiv">
+                    <img
+                        src={productDetails.image}
+                        alt=""
+                    />
                 </div>
-                <div className="contactDetails">
-                    <p>Seller details</p>
-                    <p>{user ? user.displayName : ''}</p>
-                    <p>{user ? user.phone : ''}</p>
+                <div className="rightSection">
+                    <div className="productDetails">
+                        <p>&#x20B9; {productDetails.price} </p>
+                        <span>{productDetails.name}</span>
+                        <p>{productDetails.category}</p>
+                        <span>{productDetails.date}</span>
+                    </div>
+                    <div className="contactDetails">
+                        <p>Seller details</p>
+                        <p>{user ? user.displayName : ''}</p>
+                        <p>{user ? user.phone : ''}</p>
+                    </div>
                 </div>
-            </div>
+            </div>)}
         </div>
     );
 }
