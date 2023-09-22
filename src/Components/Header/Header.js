@@ -61,7 +61,7 @@ function Header() {
                 {
                     user && <button onClick={handleLogout}>Logout</button>
                 }
-                <a href='/sell'>
+                {user && <a href='/sell'>
                 <div className="sellMenu">
                     <SellButton></SellButton>
                     <div className="sellMenuContent">
@@ -69,7 +69,7 @@ function Header() {
                             <span>SELL</span>
                     </div>
                 </div>
-                </a>
+                </a>}
             </div>
         </div>
     );
